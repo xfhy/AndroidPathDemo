@@ -6,17 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".livedata.LifeDataActivity">
 
-    <Button
-        android:id="@+id/btn_test"
+    <TextView
+        android:id="@+id/tv_observer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="加载"/>
+        android:text="初始数据"/>
 
-    <ImageView
-        android:id="@+id/iv_test"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+    <Button
+        android:id="@+id/btn_change_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="改变数据"/>
 
 </LinearLayout>
