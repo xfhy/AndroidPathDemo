@@ -1,21 +1,21 @@
 package com.xfhy.downloadview;
 
-import android.annotation.SuppressLint;
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 /**
  * Created by feiyang on 2019/3/27 18:29
  * Description :
  */
-public class DownloadView extends View {
+public class DownloadView extends View implements Animator.AnimatorListener {
 
     private static final String TAG = "DownloadView";
     /**
@@ -31,28 +31,12 @@ public class DownloadView extends View {
     private int mWidth, mHeight, mRadius;
     private int mProgress = 0;
     private int mDelay = 100;
-
-    @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            mProgress++;
-            invalidate();
-            if (mProgress == 100) {
-                mHandler.removeCallbacks(mNextRunnable);
-            } else {
-                mHandler.postDelayed(mNextRunnable, mDelay);
-            }
-        }
-    };
-
-    private Runnable mNextRunnable = new Runnable() {
-        @Override
-        public void run() {
-            mHandler.sendEmptyMessage(0);
-        }
-    };
-    private int mTopEffectiveSlidingWidth;
+    private LinearInterpolator mLinearInterpolator = new LinearInterpolator();
+    /**
+     * 中间可以滑动的区域
+     */
+    private double mTopEffectiveSlidingWidth;
+    private ValueAnimator mLeftToRightAnim;
 
     public DownloadView(Context context) {
         this(context, null);
@@ -75,7 +59,13 @@ public class DownloadView extends View {
         mBottomPaint.setColor(mBottomColor);
         mBottomPaint.setStyle(Paint.Style.FILL);
         mBottomPaint.setStrokeCap(Paint.Cap.ROUND);
-        start();
+
+        mLeftToRightAnim = ValueAnimator.ofFloat(0f, 500f, 1000f);
+        mLeftToRightAnim.setInterpolator(mLinearInterpolator);
+        mLeftToRightAnim.setDuration(10 * 1000);
+        mLeftToRightAnim.addUpdateListener(mLeftToRightAnimListener);
+        mLeftToRightAnim.addListener(this);
+        mLeftToRightAnim.start();
     }
 
     @Override
@@ -85,14 +75,14 @@ public class DownloadView extends View {
         canvas.drawColor(Color.BLACK);
         canvas.drawLine(mRadius, mRadius, mWidth - mRadius, mRadius, mBottomPaint);
 
-        int slideWidth = mTopEffectiveSlidingWidth * mProgress + mHeight;
+        double slideWidth = mTopEffectiveSlidingWidth * mProgress + mHeight;
         //避免超出区域
         if (slideWidth + mRadius > mWidth) {
             canvas.drawLine(mRadius, mRadius, mWidth - mRadius, mRadius, mTopPaint);
         } else {
-            canvas.drawLine(mRadius, mRadius, slideWidth, mRadius, mTopPaint);
+            canvas.drawLine(mRadius, mRadius, (float) slideWidth, mRadius, mTopPaint);
         }
-        Log.w(TAG, "onDraw:  slideWidth=" + slideWidth + "     mWidth=" + mWidth);
+       // Log.w(TAG, "onDraw:  slideWidth=" + slideWidth + "     mWidth=" + mWidth + "    mProgress=" + mProgress);
     }
 
     @Override
@@ -108,11 +98,40 @@ public class DownloadView extends View {
         mTopPaint.setStrokeWidth(mHeight);
         mBottomPaint.setStrokeWidth(mHeight);
         mRadius = mHeight / 2;
-        mTopEffectiveSlidingWidth = (mWidth - mHeight) / 100;
+        mTopEffectiveSlidingWidth = (mWidth - mHeight) * 1.0 / 1000;
     }
 
-    public void start() {
-        mHandler.sendEmptyMessage(0);
+    private ValueAnimator.AnimatorUpdateListener mLeftToRightAnimListener = new ValueAnimator.AnimatorUpdateListener() {
+
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            float value = (float) animation.getAnimatedValue();
+            mProgress = (int) value;
+            if (mProgress % 10 == 0) {
+                //回调  进度  x%
+                Log.w(TAG, "progress: " + mProgress / 10);
+            }
+            invalidate();
+        }
+    };
+
+    @Override
+    public void onAnimationStart(Animator animation) {
+
     }
 
+    @Override
+    public void onAnimationEnd(Animator animation) {
+        //动画结束 了  记得回调
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animator animation) {
+
+    }
 }
