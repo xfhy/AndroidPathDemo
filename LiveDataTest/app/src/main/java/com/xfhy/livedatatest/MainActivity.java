@@ -1,6 +1,7 @@
 package com.xfhy.livedatatest;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.arch.core.executor.DefaultTaskExecutor;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
