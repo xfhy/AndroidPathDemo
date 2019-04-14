@@ -43,7 +43,7 @@ public class BookManagerActivity extends AppCompatActivity {
         public void onNewBookArrived(Book newBook) throws RemoteException {
             //eg:  onNewBookArrived: 当前线程Binder_2
             Log.w(TAG, "onNewBookArrived: 当前线程" + Thread.currentThread().getName());
-            //这里是运行在客户端的Binder线程池中的
+            //这里是运行在客户端的Binder线程池中的   这里不能访问UI
             mHandler.obtainMessage(MESSAGE_NEW_BOOK_ARRIVED, newBook).sendToTarget();
         }
     };
@@ -52,11 +52,13 @@ public class BookManagerActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mRemoteBookManager = IBookManager.Stub.asInterface(iBinder);
             try {
+                //这里其实应该放到子线程中去调用,因为这个方法可能很耗时
                 List<Book> bookList = mRemoteBookManager.getBookList();
                 Log.w(TAG, "query book list,list type:" + bookList.getClass().
                         getCanonicalName());
                 Log.w(TAG, "query book list:" + bookList.toString());
 
+                //这里的调用方法运行在服务端binder线程中
                 mRemoteBookManager.addBook(new Book(3, "开发艺术探索"));
                 Log.e(TAG, "add book: 3");
                 List<Book> newList = mRemoteBookManager.getBookList();
@@ -72,7 +74,8 @@ public class BookManagerActivity extends AppCompatActivity {
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             mRemoteBookManager = null;
-            Log.e(TAG, "binder died.");
+            Log.e(TAG, "binder died." + Thread.currentThread().getName());
+            //可以在这里重新连接Service
         }
     };
 

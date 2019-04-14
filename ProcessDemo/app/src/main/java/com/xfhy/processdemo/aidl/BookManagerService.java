@@ -2,8 +2,10 @@ package com.xfhy.processdemo.aidl;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -26,7 +28,7 @@ public class BookManagerService extends Service {
     private AtomicBoolean mIsServiceDestoryed = new AtomicBoolean(false);
     //支持并发读写
     private CopyOnWriteArrayList<Book> mBookList = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<IOnNewBookArrivedListener> mListenerList = new CopyOnWriteArrayList<>();
+    private RemoteCallbackList<IOnNewBookArrivedListener> mListenerList = new RemoteCallbackList<>();
 
     private Binder mBinder = new IBookManager.Stub() {
         @Override
@@ -42,23 +44,14 @@ public class BookManagerService extends Service {
 
         @Override
         public void registerListener(IOnNewBookArrivedListener listener) throws RemoteException {
-            if (!mListenerList.contains(listener)) {
-                mListenerList.add(listener);
-            } else {
-                Log.e(TAG, "already exists.");
-            }
-            Log.e(TAG, "registerListener,size:" + mListenerList.size());
+            Log.w(TAG, "registerListener: 注册" + listener);
+            mListenerList.register(listener);
         }
 
         @Override
         public void unregisterListener(IOnNewBookArrivedListener listener) throws RemoteException {
-            if (mListenerList.contains(listener)) {
-                mListenerList.remove(listener);
-                Log.e(TAG, "unregister listener succeed.");
-            } else {
-                Log.e(TAG, "not found,can not unregister.");
-            }
-            Log.d(TAG, "unregisterListener,current size:" + mListenerList.size());
+            Log.w(TAG, "registerListener: 解注册" + listener);
+            mListenerList.unregister(listener);
         }
     };
 
@@ -80,17 +73,33 @@ public class BookManagerService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+        //校验权限
+        int check = checkCallingOrSelfPermission("com.xfhy.processdemo.permission.ACCESS_BOOK_SERVICE");
+        if (check == PackageManager.PERMISSION_DENIED) {
+            Log.e(TAG, "onBind: null");
+            return null;
+        }
         return mBinder;
     }
 
     private void onNewBookArrived(Book book) throws RemoteException {
         mBookList.add(book);
-        Log.e(TAG, "onNewBookArrived,notify listeners:" + mListenerList.size());
 
-        for (IOnNewBookArrivedListener iOnNewBookArrivedListener : mListenerList) {
-            Log.e(TAG, "onNewBookArrived,notify listener:" + iOnNewBookArrivedListener);
-            iOnNewBookArrivedListener.onNewBookArrived(book);
+        /*
+         * 对RemoteCallbackList的操作,比如有beginBroadcast和finishBroadcast才行,比如获取元素或者获取元素个数等
+         * */
+        Log.w(TAG, "run: 通知监听器");
+        //1. beginBroadcast
+        final int N = mListenerList.beginBroadcast();
+        for (int i = 0; i < N; i++) {
+            IOnNewBookArrivedListener broadcastItem = mListenerList.getBroadcastItem(i);
+            if (broadcastItem != null) {
+                //被调用的方法运行在客户端的binder线程池中
+                broadcastItem.onNewBookArrived(book);
+            }
         }
+        //2. finishBroadcast  成对出现
+        mListenerList.finishBroadcast();
     }
 
     /**
