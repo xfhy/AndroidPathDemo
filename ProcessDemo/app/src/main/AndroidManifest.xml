@@ -3,15 +3,14 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.xfhy.processdemo">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-    <!--声明权限-->
-    <uses-permission android:name="com.xfhy.processdemo.permission.ACCESS_BOOK_SERVICE"
-                android:protectionLevel="normal"/>
-
-    <!--定义权限-->
-    <permission android:name="com.xfhy.processdemo.permission.ACCESS_BOOK_SERVICE"
-                     android:protectionLevel="normal"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- 声明权限 -->
+    <uses-permission
+        android:name="com.xfhy.processdemo.permission.ACCESS_BOOK_SERVICE"
+        android:protectionLevel="normal"/>
+    <uses-permission android:name="com.xfhy.PROVIDER"/> <!-- 定义权限 -->
+    <permission
+        android:name="com.xfhy.processdemo.permission.ACCESS_BOOK_SERVICE"
+        android:protectionLevel="normal"/>
 
     <application
         android:name=".MyApplication"
@@ -22,15 +21,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".aidl.BookManagerActivity">
+        <activity android:name=".contentprovider.ProviderActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".messenger.MessengerActivity">
+        <activity android:name=".aidl.BookManagerActivity">
 
+        </activity>
+        <activity android:name=".messenger.MessengerActivity">
         </activity>
         <activity android:name=".MainActivity">
         </activity>
@@ -49,6 +50,13 @@
         <service
             android:name=".aidl.BookManagerService"
             android:process=":remote"/>
+
+        <!--  android:authorities 唯一标识-->
+        <provider
+            android:name=".contentprovider.BookProvider"
+            android:authorities="com.xfhy.processdemo.contentprovider"
+            android:permission="com.xfhy.PROVIDER"
+            android:process=":provider"/>
     </application>
 
 </manifest>

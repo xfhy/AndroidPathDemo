@@ -12,6 +12,9 @@ public class User implements Serializable {
     public String userName;
     public boolean isMale;
 
+    public User() {
+    }
+
     public User(int userId, String userName, boolean isMale) {
         this.userId = userId;
         this.userName = userName;
