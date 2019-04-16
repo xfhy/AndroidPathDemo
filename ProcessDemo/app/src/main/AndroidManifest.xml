@@ -3,7 +3,9 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.xfhy.processdemo">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- 声明权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> <!-- 声明权限 -->
     <uses-permission
         android:name="com.xfhy.processdemo.permission.ACCESS_BOOK_SERVICE"
         android:protectionLevel="normal"/>
@@ -21,6 +23,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".socket.TCPClientActivity">
+        </activity>
         <activity android:name=".contentprovider.ProviderActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -29,7 +33,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".aidl.BookManagerActivity">
-
         </activity>
         <activity android:name=".messenger.MessengerActivity">
         </activity>
@@ -50,8 +53,7 @@
         <service
             android:name=".aidl.BookManagerService"
             android:process=":remote"/>
-
-        <!--  android:authorities 唯一标识-->
+        <service android:name=".socket.TCPServerService"/> <!-- android:authorities 唯一标识 -->
         <provider
             android:name=".contentprovider.BookProvider"
             android:authorities="com.xfhy.processdemo.contentprovider"
