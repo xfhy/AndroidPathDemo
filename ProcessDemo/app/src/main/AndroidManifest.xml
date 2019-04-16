@@ -5,14 +5,17 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> <!-- 声明权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- 声明权限 -->
     <uses-permission
         android:name="com.xfhy.processdemo.permission.ACCESS_BOOK_SERVICE"
         android:protectionLevel="normal"/>
-    <uses-permission android:name="com.xfhy.PROVIDER"/> <!-- 定义权限 -->
+    <uses-permission android:name="com.xfhy.PROVIDER"/>
+
     <permission
         android:name="com.xfhy.processdemo.permission.ACCESS_BOOK_SERVICE"
         android:protectionLevel="normal"/>
+    <!-- 定义权限 -->
 
     <application
         android:name=".MyApplication"
@@ -23,12 +26,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".socket.TCPClientActivity">
+
+        <activity android:name=".binderpool.BinderPoolActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+
+        <activity android:name=".socket.TCPClientActivity">
         </activity>
         <activity android:name=".contentprovider.ProviderActivity">
         </activity>
@@ -53,15 +60,18 @@
         <service
             android:name=".aidl.BookManagerService"
             android:process=":remote"/>
-        <service android:name=".socket.TCPServerService"
+        <service
+            android:name=".socket.TCPServerService"
             android:process=":remote"/>
-
         <!-- android:authorities 唯一标识 -->
         <provider
             android:name=".contentprovider.BookProvider"
             android:authorities="com.xfhy.processdemo.contentprovider"
             android:permission="com.xfhy.PROVIDER"
             android:process=":provider"/>
+        <service
+            android:name=".binderpool.BinderPoolService"
+            android:process=":remote"/>
     </application>
 
 </manifest>
