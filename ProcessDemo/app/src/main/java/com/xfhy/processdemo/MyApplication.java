@@ -16,6 +16,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Log.w(TAG, "onCreate: " + Process.myPid());
+        Log.e(TAG, "onCreate: " + Process.myPid());
     }
 }

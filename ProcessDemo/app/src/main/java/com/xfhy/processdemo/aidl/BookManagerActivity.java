@@ -42,7 +42,7 @@ public class BookManagerActivity extends AppCompatActivity {
         @Override
         public void onNewBookArrived(Book newBook) throws RemoteException {
             //eg:  onNewBookArrived: 当前线程Binder_2
-            Log.w(TAG, "onNewBookArrived: 当前线程" + Thread.currentThread().getName());
+            Log.e(TAG, "onNewBookArrived: 当前线程" + Thread.currentThread().getName());
             //这里是运行在客户端的Binder线程池中的   这里不能访问UI
             mHandler.obtainMessage(MESSAGE_NEW_BOOK_ARRIVED, newBook).sendToTarget();
         }
@@ -54,9 +54,9 @@ public class BookManagerActivity extends AppCompatActivity {
             try {
                 //这里其实应该放到子线程中去调用,因为这个方法可能很耗时
                 List<Book> bookList = mRemoteBookManager.getBookList();
-                Log.w(TAG, "query book list,list type:" + bookList.getClass().
+                Log.e(TAG, "query book list,list type:" + bookList.getClass().
                         getCanonicalName());
-                Log.w(TAG, "query book list:" + bookList.toString());
+                Log.e(TAG, "query book list:" + bookList.toString());
 
                 //这里的调用方法运行在服务端binder线程中
                 mRemoteBookManager.addBook(new Book(3, "开发艺术探索"));

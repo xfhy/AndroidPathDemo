@@ -44,13 +44,13 @@ public class BookManagerService extends Service {
 
         @Override
         public void registerListener(IOnNewBookArrivedListener listener) throws RemoteException {
-            Log.w(TAG, "registerListener: 注册" + listener);
+            Log.e(TAG, "registerListener: 注册" + listener);
             mListenerList.register(listener);
         }
 
         @Override
         public void unregisterListener(IOnNewBookArrivedListener listener) throws RemoteException {
-            Log.w(TAG, "registerListener: 解注册" + listener);
+            Log.e(TAG, "registerListener: 解注册" + listener);
             mListenerList.unregister(listener);
         }
     };
@@ -88,7 +88,7 @@ public class BookManagerService extends Service {
         /*
          * 对RemoteCallbackList的操作,比如有beginBroadcast和finishBroadcast才行,比如获取元素或者获取元素个数等
          * */
-        Log.w(TAG, "run: 通知监听器");
+        Log.e(TAG, "run: 通知监听器");
         //1. beginBroadcast
         final int N = mListenerList.beginBroadcast();
         for (int i = 0; i < N; i++) {

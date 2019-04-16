@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         FileCommunicate.persistToFile();
 
         UserManager.sUserId = 2;
-        Log.w("xfhy", "MainActivity onCreate: " + UserManager.sUserId);
+        Log.e("xfhy", "MainActivity onCreate: " + UserManager.sUserId);
         Intent intent = new Intent(this, SecondActivity.class);
         startActivity(intent);
     }

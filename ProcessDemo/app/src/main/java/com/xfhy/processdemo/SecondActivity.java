@@ -21,7 +21,7 @@ public class SecondActivity extends AppCompatActivity {
                 FileCommunicate.recoverFromFile();
             }
         });
-        /*Log.w("xfhy", "SecondActivity onCreate: " + UserManager.sUserId);
+        /*Log.e("xfhy", "SecondActivity onCreate: " + UserManager.sUserId);
         Intent intent = new Intent(this, ThirdActivity.class);
         startActivity(intent);*/
     }

@@ -30,12 +30,12 @@ public class TCPClientActivity extends AppCompatActivity implements View.OnClick
 
     private static final int MESSAGE_RECEIVE_NEW_MSG = 1;
     private static final int MESSAGE_SOCKET_CONNECTED = 2;
+    private static final String TAG = "TCPClientActivity";
     private Button mSendButton;
     private TextView mMessageTextView;
     private EditText mMessageEditText;
     private PrintWriter mPrintWriter;
     private Socket mClientSocket;
-
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @SuppressLint("SetTextI18n")
@@ -89,36 +89,32 @@ public class TCPClientActivity extends AppCompatActivity implements View.OnClick
             try {
                 socket = new Socket("localhost", 8688);
                 mClientSocket = socket;
-                mPrintWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
+                mPrintWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
                 mHandler.sendEmptyMessage(MESSAGE_SOCKET_CONNECTED);
-                Log.w(TAG, "connect server success.");
+                Log.e(TAG, "connect server success.");
             } catch (IOException e) {
                 //睡1秒 再重试
                 SystemClock.sleep(1000);
-                Log.w(TAG, "connect tcp server failed,retry...");
+                Log.e(TAG, "connect tcp server failed,retry...");
             }
         }
 
         //接收服务端的消息
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         while (!TCPClientActivity.this.isFinishing()) {
-
-        }
-    }
-
-    private static final String TAG = "TCPClientActivity";
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.btn_send) {
-            String msg = mMessageEditText.getText().toString();
-            if (!TextUtils.isEmpty(msg) && mPrintWriter != null) {
-                mPrintWriter.println(msg);
+            String msg = bufferedReader.readLine();
+            Log.e(TAG, "connectTCPServer: " + msg);
+            if (msg != null) {
                 String time = formatDateTime(System.currentTimeMillis());
-                final String showedMsg = "self " + time + ":" + msg + "\n";
-                mMessageTextView.setText(mMessageTextView.getText() + showedMsg);
+                final String showedMsg = "server " + time + ":" + msg
+                        + "\n";
+                mHandler.obtainMessage(MESSAGE_RECEIVE_NEW_MSG, showedMsg).sendToTarget();
             }
         }
+        Log.e(TAG, "quit....");
+        mPrintWriter.close();
+        bufferedReader.close();
+        socket.close();
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -137,5 +133,18 @@ public class TCPClientActivity extends AppCompatActivity implements View.OnClick
             }
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btn_send) {
+            String msg = mMessageEditText.getText().toString();
+            if (!TextUtils.isEmpty(msg) && mPrintWriter != null) {
+                mPrintWriter.println(msg);
+                String time = formatDateTime(System.currentTimeMillis());
+                final String showedMsg = "self " + time + ":" + msg + "\n";
+                mMessageTextView.setText(mMessageTextView.getText() + showedMsg);
+            }
+        }
     }
 }

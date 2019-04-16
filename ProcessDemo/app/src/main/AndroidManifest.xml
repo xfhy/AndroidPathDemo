@@ -24,13 +24,13 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".socket.TCPClientActivity">
-        </activity>
-        <activity android:name=".contentprovider.ProviderActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".contentprovider.ProviderActivity">
         </activity>
         <activity android:name=".aidl.BookManagerActivity">
         </activity>
@@ -53,7 +53,10 @@
         <service
             android:name=".aidl.BookManagerService"
             android:process=":remote"/>
-        <service android:name=".socket.TCPServerService"/> <!-- android:authorities 唯一标识 -->
+        <service android:name=".socket.TCPServerService"
+            android:process=":remote"/>
+
+        <!-- android:authorities 唯一标识 -->
         <provider
             android:name=".contentprovider.BookProvider"
             android:authorities="com.xfhy.processdemo.contentprovider"

@@ -32,7 +32,7 @@ public class MessengerService extends Service {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MyConstants.MSG_FROM_CLIENT:
-                    Log.w(TAG, "receive msg from Client:" + msg.getData().
+                    Log.e(TAG, "receive msg from Client:" + msg.getData().
                             getString("msg"));
                     Message relpyMessage = Message.obtain(null, MyConstants.MSG_FROM_SERVICE);
 

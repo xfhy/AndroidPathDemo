@@ -11,6 +11,6 @@ public class ThirdActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third);
 
-        Log.w("xfhy", "SecondActivity onCreate: " + UserManager.sUserId);
+        Log.e("xfhy", "SecondActivity onCreate: " + UserManager.sUserId);
     }
 }
