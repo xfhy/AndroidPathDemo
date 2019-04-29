@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,5 +49,12 @@ public class StringDataAdapter extends RecyclerView.Adapter<StringDataAdapter.St
             super(itemView);
             tvData = itemView.findViewById(R.id.tv_data);
         }
+    }
+
+    public List<String> getStringList() {
+        if (mStringList == null) {
+            mStringList = new ArrayList<>();
+        }
+        return mStringList;
     }
 }
