@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import com.xfhy.recyclerviewdemo.common.ItemTouchHelperCallback;
+import com.xfhy.recyclerviewdemo.common.StringItemTouchHelperCallback;
 import com.xfhy.recyclerviewdemo.common.divider.DividerListItemDecoration;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         mStringDataRv.addItemDecoration(new DividerListItemDecoration(this, LinearLayoutManager.VERTICAL));
 
         //拖拽 滑动删除
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback());
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new StringItemTouchHelperCallback(stringDataAdapter));
         itemTouchHelper.attachToRecyclerView(mStringDataRv);
     }
 
