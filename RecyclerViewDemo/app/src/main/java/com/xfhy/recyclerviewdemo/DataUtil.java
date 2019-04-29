@@ -8,6 +8,9 @@ import java.util.List;
  * Description :
  */
 class DataUtil {
+    /**
+     * 搞点测试数据
+     */
     public static List<String> getStrTestData() {
         List<String> strings = new ArrayList<>();
         for (int i = 0; i < 100; i++) {

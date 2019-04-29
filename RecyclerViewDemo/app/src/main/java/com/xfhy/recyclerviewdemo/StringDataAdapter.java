@@ -26,14 +26,14 @@ public class StringDataAdapter extends RecyclerView.Adapter<StringDataAdapter.St
 
     @NonNull
     @Override
-    public StringDataViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = mLayoutInflater.inflate(R.layout.item_string_data, viewGroup, false);
+    public StringDataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = mLayoutInflater.inflate(R.layout.item_string_data, parent, false);
         return new StringDataViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull StringDataViewHolder stringDataViewHolder, int i) {
-        stringDataViewHolder.tvData.setText(mStringList.get(i));
+    public void onBindViewHolder(@NonNull StringDataViewHolder holder, int position) {
+        holder.tvData.setText(mStringList.get(position));
     }
 
     @Override
