@@ -1,17 +1,9 @@
 package com.xfhy.okhttptest;
 
 import androidx.appcompat.app.AppCompatActivity;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -28,7 +20,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        OkHttpGet okHttpGet = new OkHttpGet();
+        IHttpRequest okHttpGet = new OkHttpGet();
+//        IOkHttp okHttpGet = new OkHttpPost();
         okHttpGet.request();
     }
 }

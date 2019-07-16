@@ -14,7 +14,7 @@ import okhttp3.Response;
  * Created by feiyang on 2019-07-16 19:58
  * Description :
  */
-public class OkHttpGet implements IOkHttp {
+public class OkHttpGet implements IHttpRequest {
 
     private static final String TAG = "OkHttpGet";
 
